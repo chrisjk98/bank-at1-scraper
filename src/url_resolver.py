@@ -142,32 +142,13 @@ class URLResolver:
         return None
 
     def _investor_relations_lookup(self, bank: BankRecord) -> str | None:
-        domain_hint = re.sub(r"[^a-z0-9]+", "", bank.company_name.lower())
-        if not domain_hint:
-            return None
-        return f"https://www.{domain_hint[:40]}.com/investor-relations/annual-report-2022"
-
-    def _country_regulatory_lookup(self, bank: BankRecord) -> str | None:
-        name = bank.company_name.upper()
-        regulators = {
-            "PLC": "https://register.fca.org.uk/s/search?query=",
-            "AG": "https://portal.mvp.bafin.de/database/InstInfo/suche.do?search=",
-            "SA": "https://acpr.banque-france.fr/recherche?query=",
-            "SPA": "https://www.bancaditalia.it/compiti/vigilanza/albi-elenchi/index.html?query=",
-            "NV": "https://www.dnb.nl/en/search/?query=",
-            "AS": "https://www.finanstilsynet.no/en/search/?query=",
-            "A/S": "https://www.finanstilsynet.dk/en/search/?query=",
-            "AB": "https://www.fi.se/en/search/?query=",
-            "PL": "https://www.knf.gov.pl/en/search?query=",
-        }
-        for suffix, base_url in regulators.items():
-            if suffix in name:
-                return f"{base_url}{requests.utils.quote(bank.company_name)}"
         return None
 
-    def _google_fallback(self, bank: BankRecord) -> str:
-        query = requests.utils.quote(f"{bank.company_name} annual report 2022 pdf")
-        return f"https://www.google.com/search?q={query}"
+    def _country_regulatory_lookup(self, bank: BankRecord) -> str | None:
+        return None
+
+    def _google_fallback(self, bank: BankRecord) -> str | None:
+        return None
 
     @staticmethod
     def _normalize_name(name: str) -> str:

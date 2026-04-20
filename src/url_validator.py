@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import logging
+import re
 from dataclasses import dataclass, field
 
 import requests
 
 LOGGER = logging.getLogger(__name__)
+YEAR_PATTERN = re.compile(r"(?<!\d)2022(?!\d)")
 
 
 @dataclass
@@ -36,7 +38,7 @@ class URLValidator:
                 verify=self.verify_ssl,
                 headers={"User-Agent": "Mozilla/5.0 (AT1-Scraper/1.0)"},
             )
-            if response.status_code >= 400 or response.status_code < 200:
+            if not (200 <= response.status_code < 400):
                 return URLValidationResult(
                     url=url,
                     valid=False,
@@ -49,7 +51,7 @@ class URLValidator:
             content_length = response.headers.get("content-length")
             size_bytes = int(content_length) if content_length and content_length.isdigit() else None
             is_pdf = "pdf" in content_type or url.lower().endswith(".pdf")
-            is_2022 = "2022" in url
+            is_2022 = bool(YEAR_PATTERN.search(url))
 
             valid = is_pdf and is_2022 and (size_bytes is None or size_bytes >= self.min_expected_size_bytes)
             reason = ""

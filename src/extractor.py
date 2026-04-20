@@ -5,7 +5,10 @@ from dataclasses import dataclass
 
 from .models import AT1Metrics, ParseResult
 
-AMOUNT_PATTERN = re.compile(r"(?:AT1|Additional Tier 1)[^\n]{0,80}?([0-9][0-9,\.]{1,20})\s*(?:EUR|€|million|mn)?", re.IGNORECASE)
+AMOUNT_PATTERN = re.compile(
+    r"(?:AT1|Additional Tier 1)[^\n]{0,80}?((?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d{1,2})?)\s*(?:EUR|€|million|mn)?",
+    re.IGNORECASE,
+)
 RATIO_PATTERN = re.compile(r"(?:AT1|Additional Tier 1)[^\n]{0,120}?([0-9]{1,2}(?:\.[0-9]{1,2})?)\s*%", re.IGNORECASE)
 CET1_PATTERN = re.compile(r"(?:CET1|Common Equity Tier 1)[^\n]{0,120}?([0-9]{1,2}(?:\.[0-9]{1,2})?)\s*%", re.IGNORECASE)
 INSTRUMENT_PATTERN = re.compile(r"\b(perpetual|bond|preferred shares?|hybrid|notes?)\b", re.IGNORECASE)

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import logging
 import time
 from dataclasses import dataclass, field
@@ -47,9 +46,10 @@ class PDFDownloader:
                         for chunk in response.iter_content(chunk_size=self.chunk_size):
                             if chunk:
                                 file_obj.write(chunk)
-                if self._is_corrupted(target_file):
+                corrupted, corruption_reason = self._is_corrupted(target_file)
+                if corrupted:
                     target_file.unlink(missing_ok=True)
-                    raise ValueError("Downloaded file appears corrupted")
+                    raise ValueError(f"Downloaded file appears corrupted: {corruption_reason}")
                 return DownloadResult(url=url, path=target_file, downloaded=True)
             except (requests.RequestException, ValueError) as exc:
                 LOGGER.warning("Download failed for %s attempt %s/%s: %s", url, attempt, self.retries, exc)
@@ -63,14 +63,15 @@ class PDFDownloader:
         return "".join(ch if ch.isalnum() else "_" for ch in name).strip("_")[:80]
 
     @staticmethod
-    def _is_corrupted(file_path: Path) -> bool:
+    def _is_corrupted(file_path: Path) -> tuple[bool, str]:
         if not file_path.exists() or file_path.stat().st_size < 50_000:
-            return True
+            return True, "file missing or unexpectedly small"
         with file_path.open("rb") as file_obj:
             prefix = file_obj.read(5)
             if prefix != b"%PDF-":
-                return True
+                return True, "missing PDF header"
             file_obj.seek(max(file_path.stat().st_size - 1024, 0))
             tail = file_obj.read()
-        digest = hashlib.sha1(tail).hexdigest()
-        return "255f" not in digest and b"%%EOF" not in tail
+        if b"%%EOF" not in tail:
+            return True, "missing PDF EOF marker"
+        return False, ""

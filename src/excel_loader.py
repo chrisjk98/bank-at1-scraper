@@ -59,9 +59,9 @@ class ExcelLoader:
         normalized_columns: dict[str, str] = {}
         for column in df.columns:
             key = str(column).strip().lower().replace(" ", "")
-            if key in {"gvkey", "gv_key", "a"}:
+            if key in {"gvkey", "gv_key"}:
                 normalized_columns[column] = "gvkey"
-            elif key in {"conm", "companyname", "bankname", "b"}:
+            elif key in {"conm", "companyname", "bankname"}:
                 normalized_columns[column] = "company_name"
 
         if "gvkey" not in normalized_columns.values() or "company_name" not in normalized_columns.values():

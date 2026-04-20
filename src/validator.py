@@ -32,5 +32,5 @@ class DataValidator:
         if metrics.extraction_status == "failed":
             errors.append("Extraction failed")
 
-        requires_manual_review = metrics.extraction_status in {"manual_review", "failed"} or bool(errors)
+        requires_manual_review = bool(errors) or metrics.extraction_status != "success"
         return ValidationOutcome(valid=not errors, requires_manual_review=requires_manual_review, errors=errors)

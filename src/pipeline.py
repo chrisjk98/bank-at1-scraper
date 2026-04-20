@@ -42,7 +42,7 @@ class Pipeline:
             from tqdm import tqdm
 
             progress_iter = tqdm(banks, desc="Processing banks", unit="bank")
-        except Exception:
+        except ImportError:
             pass
 
         for idx, bank in enumerate(progress_iter, start=1):
@@ -98,7 +98,8 @@ class Pipeline:
             validation_outcome = self.validator.validate(metrics)
             if validation_outcome.errors:
                 prior_notes = metrics.notes.strip()
-                metrics.notes = "; ".join(filter(None, [prior_notes, *validation_outcome.errors]))
+                combined_notes = "; ".join(filter(None, [prior_notes, *validation_outcome.errors]))
+                metrics.notes = combined_notes[:500]
                 metrics.extraction_status = "manual_review"
             results.append(metrics)
             self._save_state(results)
