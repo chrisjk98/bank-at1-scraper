@@ -80,7 +80,7 @@ def run_pipeline(
     for bank in banks:
         key = _state_key(bank)
         previous = state.get(key)
-        if previous and (previous.get("extraction_status") == "success" or not retry_failed):
+        if previous and (previous.get("Extraction Status") == "success" or not retry_failed):
             rows_by_key[key] = previous
             continue
 

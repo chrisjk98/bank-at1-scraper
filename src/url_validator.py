@@ -4,6 +4,9 @@ from dataclasses import dataclass
 
 import requests
 
+PDF_EOF_SEARCH_WINDOW = 2048
+CONTENT_SEARCH_BYTES = 4096
+
 
 @dataclass(frozen=True)
 class URLValidationResult:
@@ -43,10 +46,10 @@ def validate_annual_report_url(url: str, *, timeout: int = 30, session: requests
     if not _looks_like_pdf(content, content_type, response.url):
         return URLValidationResult(is_valid=False, reason="not_pdf", final_url=response.url)
 
-    if not content.startswith(b"%PDF") or b"%%EOF" not in content[-2048:]:
+    if not content.startswith(b"%PDF") or b"%%EOF" not in content[-PDF_EOF_SEARCH_WINDOW:]:
         return URLValidationResult(is_valid=False, reason="corrupted_pdf", final_url=response.url)
 
-    marker_text = (response.url + " " + content[:4096].decode("latin-1", errors="ignore")).lower()
+    marker_text = (response.url + " " + content[:CONTENT_SEARCH_BYTES].decode("latin-1", errors="ignore")).lower()
     if "2022" not in marker_text:
         return URLValidationResult(is_valid=False, reason="not_2022_report", final_url=response.url)
 

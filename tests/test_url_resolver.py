@@ -4,7 +4,7 @@ from src.excel_loader import BankInput
 from src.url_resolver import URLResolver
 
 
-class FakeResolver(URLResolver):
+class StubResolver(URLResolver):
     def _lookup_ecb_data(self, bank):
         return None
 
@@ -14,7 +14,7 @@ class FakeResolver(URLResolver):
 
 def test_resolver_caches_successful_resolution(tmp_path: Path) -> None:
     cache_path = tmp_path / "cache.json"
-    resolver = FakeResolver(config={}, cache_path=cache_path)
+    resolver = StubResolver(config={}, cache_path=cache_path)
     bank = BankInput(gvkey="123", company_name="Demo Bank")
 
     first = resolver.resolve(bank)

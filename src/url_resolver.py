@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from .excel_loader import BankInput
 
 LOGGER = logging.getLogger(__name__)
+PDF_LINK_LIMIT = 20
 
 
 @dataclass(frozen=True)
@@ -93,8 +94,11 @@ class URLResolver:
         self.logger.warning("Failed to resolve annual report URL for %s", bank.company_name)
         return URLResolutionResult(bank.gvkey, bank.company_name, None, None, False)
 
-    def _extract_pdf_links(self, html: str, *, limit: int = 20) -> Iterable[str]:
-        soup = BeautifulSoup(html, "lxml")
+    def _extract_pdf_links(self, html: str, *, limit: int = PDF_LINK_LIMIT) -> Iterable[str]:
+        try:
+            soup = BeautifulSoup(html, "lxml")
+        except Exception:
+            soup = BeautifulSoup(html, "html.parser")
         count = 0
         for link in soup.find_all("a", href=True):
             href = link["href"]
@@ -120,9 +124,9 @@ class URLResolver:
         if not html:
             return None
         for href in self._extract_pdf_links(html):
-            if href.startswith("http"):
-                return href
-            return requests.compat.urljoin(url, href)
+            candidate = href if href.startswith("http") else requests.compat.urljoin(url, href)
+            if candidate.startswith("http"):
+                return candidate
         return None
 
     def _lookup_ecb_data(self, bank: BankInput) -> Optional[str]:

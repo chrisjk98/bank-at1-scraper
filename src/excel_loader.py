@@ -6,6 +6,9 @@ from typing import Dict, List, Optional, Tuple
 
 import openpyxl
 
+GVKEY_HEADER_VARIANTS = {"gvkey", "gv_key"}
+COMPANY_HEADER_VARIANTS = {"companyname", "bankname", "company"}
+
 
 @dataclass(frozen=True)
 class BankInput:
@@ -25,11 +28,7 @@ def _normalize_header(value: object) -> str:
 def _is_header_row(row: Tuple[object, ...]) -> bool:
     if len(row) < 2:
         return False
-    return _normalize_header(row[0]) in {"gvkey", "gv_key"} and _normalize_header(row[1]) in {
-        "companyname",
-        "bankname",
-        "company",
-    }
+    return _normalize_header(row[0]) in GVKEY_HEADER_VARIANTS and _normalize_header(row[1]) in COMPANY_HEADER_VARIANTS
 
 
 def _validate_extension(file_path: Path) -> None:
