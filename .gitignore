@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+
+# Runtime outputs
+data/output/
+data/pdfs/

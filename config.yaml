@@ -1,0 +1,32 @@
+regulatory_sources:
+  UK: "https://register.fca.org.uk"
+  Germany: "https://portal.mvp.bafin.de/database/InstInfo/"
+  France: "https://acpr.banque-france.fr"
+  Spain: "https://www.bde.es"
+  Italy: "https://www.bancaditalia.it"
+  Netherlands: "https://www.dnb.nl"
+  Belgium: "https://www.nbb.be"
+  Austria: "https://www.oenb.at"
+  Poland: "https://www.knf.gov.pl"
+  Nordic: "https://www.esma.europa.eu"
+
+timeouts:
+  request_seconds: 20
+  download_seconds: 60
+
+rate_limiting:
+  request_delay_seconds: 0.5
+  retries: 3
+
+search_keywords:
+  - "Additional Tier 1 Capital"
+  - "AT1 Capital"
+  - "Core Tier 1"
+  - "Pillar 3 Disclosure"
+  - "Capital Instruments"
+
+output:
+  csv_path: "data/output/extracted_data.csv"
+  html_path: "data/output/extraction_report.html"
+  cache_path: "data/output/url_cache.json"
+  state_path: "data/output/pipeline_state.json"
