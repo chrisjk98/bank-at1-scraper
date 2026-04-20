@@ -1,0 +1,16 @@
+# URL resolution behavior
+resolution_timeout_seconds: 30
+validation_timeout_seconds: 30
+rate_limit_seconds: 0.2
+
+# EU lookup endpoints/templates
+ecb_lookup_url_template: "https://www.ecb.europa.eu/search/html/index.en.html?q={gvkey}+{company_name}+annual+report+2022+pdf"
+bank_website_search_template: "https://duckduckgo.com/html/?q={company_name}+investor+relations+annual+report+2022+pdf"
+regulatory_filings_endpoints:
+  - "https://www.bafin.de/SiteGlobals/Forms/Suche/EN/Expertensuche_Formular.html?queryResultId=0&resourceId=0&input_={company_name}+annual+report+2022+pdf"
+  - "https://www.amf-france.org/en/search?keywords={company_name}+annual+report+2022+pdf"
+  - "https://www.afm.nl/en/sector/registers/meldingenregisters/search?query={company_name}+annual+report+2022+pdf"
+  - "https://www.bankofitaly.it/compiti/vigilanza?query={company_name}+annual+report+2022+pdf"
+  - "https://www.cnmv.es/portal/home.aspx?lang=en&query={company_name}+annual+report+2022+pdf"
+annual_report_registry_template: "https://www.annualreports.com/HostedData/AnnualReportArchive/{company_name}.html"
+google_search_template: "https://www.google.com/search?q={query}"
