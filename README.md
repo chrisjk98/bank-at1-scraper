@@ -1,2 +1,21 @@
-# bank-at1-scraper
-Python scraper to extract Additional Tier 1 capital data from 200 banks' 2022 annual reports
+# Bank AT1 Scraper
+
+This is a Python project designed to scrape data from bank AT1 websites.
+
+## Installation
+
+1. Clone the repository
+2. Navigate to the project directory
+3. Install the requirements:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage
+
+Run main script:
+
+```bash
+python src/pipeline.py
+```
