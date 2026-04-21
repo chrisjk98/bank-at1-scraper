@@ -1,0 +1,9 @@
+requests
+pdfplumber
+pypdf
+pandas
+openpyxl
+beautifulsoup4
+lxml
+pyyaml
+tqdm
